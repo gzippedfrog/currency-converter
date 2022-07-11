@@ -17,7 +17,7 @@ const currencies = reactive({
 
 const result = reactive({
   loading: false,
-  value: "",
+  value: ""
 });
 
 function wheelScrollHandler(e) {
@@ -66,9 +66,15 @@ function fetchExchangeRate() {
   )
     .then((res) => res.json())
     .then((data) => {
-      result.value = data.result;
+      if (data.success) {
+        result.value = `${data.result} ${target.value}`;
+      } else {
+        result.value = `Error ${data.error?.code}: ${data.error?.info}`;
+      }
     })
-    .catch((err) => console.log(err.message))
+    .catch((err) => {
+      console.log(err.message);
+    })
     .finally(() => {
       result.loading = false;
     });
